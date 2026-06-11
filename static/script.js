@@ -1,45 +1,54 @@
-async function calcularRiesgo() {
+async function calcularProbabilidad() {
 
-    const datos = {
-        "Año": document.getElementById("anio").value,
-        "Meses": document.getElementById("mes").value,
-        "Departamento": document.getElementById("departamento").value,
-        "Estratos": document.getElementById("estratos").value,
-        "Geografico": document.getElementById("geografico").value,
-        "Visitas": document.getElementById("visitas").value,
-        "TNR_Historica_Cong": document.getElementById("tnr_cong").value,
-        "TNR_Historica_Distrito": document.getElementById("tnr_dist").value,
-        "TNR_Historica_Departamento": document.getElementById("tnr_dep").value,
-        "TEM": document.getElementById("tem").value,
-        "N_HOGAR": document.getElementById("n_hogar").value
+    const departamento = document.getElementById("departamento").value.trim();
+    const provincia = document.getElementById("provincia").value.trim();
+    const distrito = document.getElementById("distrito").value.trim();
+    const conglomerado = document.getElementById("conglomerado").value.trim();
+
+    if (!departamento || !provincia || !distrito || !conglomerado) {
+        alert("Completa Departamento, Provincia, Distrito y Conglomerado.");
+        return;
+    }
+
+    const datosConsulta = {
+        Departamento: departamento,
+        Provincia: provincia,
+        Distrito: distrito,
+        Conglomerado: conglomerado
     };
 
     try {
-        const response = await fetch("/predict", {
+        const response = await fetch("/predict_conglomerado", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(datos)
+            body: JSON.stringify(datosConsulta)
         });
 
         const resultado = await response.json();
 
         if (!response.ok) {
-            alert("Error: " + resultado.error);
+            alert(resultado.error);
             return;
         }
 
         document.getElementById("resultado").classList.remove("oculto");
 
-        document.getElementById("probabilidad").innerHTML =
-            `<strong>Probabilidad de TNR Alta:</strong> ${resultado.probabilidad_porcentaje}%`;
+        document.getElementById("probabilidad").innerText =
+            `${Number(resultado.probabilidad_porcentaje).toFixed(2)}%`;
 
-        document.getElementById("riesgo").innerHTML =
-            `<strong>Nivel de riesgo:</strong> <span class="${claseRiesgo(resultado.nivel_riesgo)}">${resultado.nivel_riesgo}</span>`;
+        document.getElementById("riesgo").innerText =
+            resultado.nivel_riesgo;
 
-        document.getElementById("clasificacion").innerHTML =
-            `<strong>Clasificación:</strong> ${resultado.clasificacion === 1 ? "TNR Alta" : "TNR No Alta"}`;
+        document.getElementById("riesgo").className =
+            "metric-value " + resultado.nivel_riesgo.toLowerCase();
+
+        document.getElementById("clasificacion").innerText =
+            resultado.clasificacion === 1 ? "TNR Alta" : "TNR No Alta";
+
+        construirTabla(resultado.info_conglomerado);
+        mostrarVariables(resultado.variables_modelo);
 
     } catch (error) {
         alert("Error al conectar con el servidor: " + error);
@@ -47,18 +56,30 @@ async function calcularRiesgo() {
 }
 
 
-function claseRiesgo(riesgo) {
-    if (riesgo === "Bajo") {
-        return "riesgo-bajo";
-    }
-    if (riesgo === "Medio") {
-        return "riesgo-medio";
-    }
-    if (riesgo === "Alto") {
-        return "riesgo-alto";
-    }
-    if (riesgo === "Crítico") {
-        return "riesgo-critico";
-    }
-    return "";
+function construirTabla(info) {
+
+    const tabla = document.getElementById("tabla-info");
+    tabla.innerHTML = "";
+
+    const columnas = Object.keys(info);
+
+    let header = "<tr>";
+    columnas.forEach(col => {
+        header += `<th>${col}</th>`;
+    });
+    header += "</tr>";
+
+    let fila = "<tr>";
+    columnas.forEach(col => {
+        fila += `<td>${info[col]}</td>`;
+    });
+    fila += "</tr>";
+
+    tabla.innerHTML = header + fila;
+}
+
+
+function mostrarVariables(variables) {
+    document.getElementById("variables-modelo").innerText =
+        JSON.stringify(variables, null, 4);
 }
