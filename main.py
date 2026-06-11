@@ -15,8 +15,9 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
     return templates.TemplateResponse(
-        "index.html",
-        {"request": request}
+        request=request,
+        name="index.html",
+        context={}
     )
 
 
@@ -24,9 +25,7 @@ def home(request: Request):
 async def predict(request: Request):
     try:
         datos = await request.json()
-
         resultado = predecir_tnr(datos)
-
         return JSONResponse(content=resultado)
 
     except Exception as e:
