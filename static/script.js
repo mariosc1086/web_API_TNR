@@ -1,3 +1,85 @@
+let ubicaciones = {};
+
+window.onload = async function () {
+
+    const response = await fetch("/ubicaciones");
+    ubicaciones = await response.json();
+
+    cargarDepartamentos();
+};
+
+function cargarDepartamentos() {
+
+    const depSelect =
+        document.getElementById("departamento");
+
+    depSelect.innerHTML = "";
+
+    Object.keys(ubicaciones).forEach(dep => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = dep;
+        option.text = dep;
+
+        depSelect.appendChild(option);
+    });
+
+    cargarProvincias();
+}
+
+function cargarProvincias() {
+
+    const dep =
+        document.getElementById("departamento").value;
+
+    const provSelect =
+        document.getElementById("provincia");
+
+    provSelect.innerHTML = "";
+
+    Object.keys(
+        ubicaciones[dep]
+    ).forEach(prov => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = prov;
+        option.text = prov;
+
+        provSelect.appendChild(option);
+    });
+
+    cargarDistritos();
+}
+
+function cargarDistritos() {
+
+    const dep =
+        document.getElementById("departamento").value;
+
+    const prov =
+        document.getElementById("provincia").value;
+
+    const distSelect =
+        document.getElementById("distrito");
+
+    distSelect.innerHTML = "";
+
+    ubicaciones[dep][prov].forEach(dist => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = dist;
+        option.text = dist;
+
+        distSelect.appendChild(option);
+    });
+}
+
 async function calcularProbabilidad() {
 
     const departamento = document.getElementById("departamento").value.trim();
@@ -78,8 +160,19 @@ function construirTabla(info) {
     tabla.innerHTML = header + fila;
 }
 
-
 function mostrarVariables(variables) {
     document.getElementById("variables-modelo").innerText =
         JSON.stringify(variables, null, 4);
 }
+
+document.addEventListener("change", function(e){
+
+    if(e.target.id === "departamento"){
+        cargarProvincias();
+    }
+
+    if(e.target.id === "provincia"){
+        cargarDistritos();
+    }
+
+});
