@@ -81,10 +81,13 @@ async def predict_conglomerado(request: Request):
         info_conglomerado = filtro_ordenado.to_dict(orient="records")
 
         # Convertir valores raros de pandas/numpy a texto/número simple
-        info_conglomerado = {
-            k: str(v) if pd.isna(v) else v
-            for k, v in info_conglomerado.items()
-        }
+        info_conglomerado = [
+            {
+                k: str(v) if pd.isna(v) else v
+                for k, v in fila.items()
+            }
+            for fila in info_conglomerado
+        ]   
 
         resultado["info_conglomerado"] = info_conglomerado
         resultado["variables_modelo"] = datos_modelo
