@@ -56,8 +56,11 @@ async def predict_conglomerado(request: Request):
                 }
             )
 
-        # Tomar el registro más reciente
-        fila = filtro.sort_values(["Año", "Meses"]).tail(1).iloc[0]
+        # Ordenar todos los registros encontrados
+        filtro_ordenado = filtro.sort_values(["Año", "Meses"])
+
+        # Tomar el registro más reciente solo para la predicción
+        fila = filtro_ordenado.tail(1).iloc[0]
 
         datos_modelo = {
             "Año": int(fila["Año"]),
@@ -75,7 +78,7 @@ async def predict_conglomerado(request: Request):
 
         resultado = predecir_tnr(datos_modelo)
 
-        info_conglomerado = fila.to_dict()
+        info_conglomerado = filtro_ordenado.to_dict(orient="records")
 
         # Convertir valores raros de pandas/numpy a texto/número simple
         info_conglomerado = {
