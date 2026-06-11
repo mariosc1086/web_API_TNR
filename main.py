@@ -93,3 +93,27 @@ async def predict_conglomerado(request: Request):
             status_code=500,
             content={"error": str(e)}
         )
+    
+@app.get("/ubicaciones")
+def obtener_ubicaciones():
+
+    estructura = {}
+
+    for dep in sorted(data["Departamento"].dropna().unique()):
+
+        estructura[dep] = {}
+
+        provincias = data[
+            data["Departamento"] == dep
+        ]["Provincia"].dropna().unique()
+
+        for prov in sorted(provincias):
+
+            distritos = data[
+                (data["Departamento"] == dep) &
+                (data["Provincia"] == prov)
+            ]["Distrito"].dropna().unique()
+
+            estructura[dep][prov] = sorted(list(distritos))
+
+    return estructura
