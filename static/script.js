@@ -143,7 +143,12 @@ function construirTabla(info) {
     const tabla = document.getElementById("tabla-info");
     tabla.innerHTML = "";
 
-    const columnas = Object.keys(info);
+    if (!info || info.length === 0) {
+        tabla.innerHTML = "<tr><td>No hay información disponible</td></tr>";
+        return;
+    }
+
+    const columnas = Object.keys(info[0]);
 
     let header = "<tr>";
     columnas.forEach(col => {
@@ -151,13 +156,16 @@ function construirTabla(info) {
     });
     header += "</tr>";
 
-    let fila = "<tr>";
-    columnas.forEach(col => {
-        fila += `<td>${info[col]}</td>`;
+    let filas = "";
+    info.forEach(row => {
+        filas += "<tr>";
+        columnas.forEach(col => {
+            filas += `<td>${row[col]}</td>`;
+        });
+        filas += "</tr>";
     });
-    fila += "</tr>";
 
-    tabla.innerHTML = header + fila;
+    tabla.innerHTML = header + filas;
 }
 
 function mostrarVariables(variables) {
