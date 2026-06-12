@@ -134,7 +134,6 @@ async function calcularProbabilidad() {
             resultado.recomendacion || "Sin recomendación disponible.";
 
         construirTabla(resultado.info_conglomerado);
-        mostrarVariables(resultado.variables_modelo);
 
     } catch (error) {
         alert("Error al conectar con el servidor: " + error);
@@ -170,11 +169,6 @@ function construirTabla(info) {
     });
 
     tabla.innerHTML = header + filas;
-}
-
-function mostrarVariables(variables) {
-    document.getElementById("variables-modelo").innerText =
-        JSON.stringify(variables, null, 4);
 }
 
 document.addEventListener("change", function(e){
@@ -219,4 +213,4 @@ function claseRiesgo(riesgo) {
         return "riesgo-critico";
     }
     return "";
-}
+}   
