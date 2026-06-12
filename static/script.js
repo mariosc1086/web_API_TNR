@@ -129,6 +129,9 @@ async function calcularProbabilidad() {
         document.getElementById("clasificacion").innerText =
             resultado.clasificacion === 1 ? "TNR Alta" : "TNR No Alta";
 
+        document.getElementById("recomendacion").innerText =
+            resultado.recomendacion;
+
         construirTabla(resultado.info_conglomerado);
         mostrarVariables(resultado.variables_modelo);
 

@@ -169,3 +169,20 @@ table td{
 .oculto{
     display:none;
 }
+
+.recomendacion-box{
+    margin-top:25px;
+    padding:18px;
+    background:#fff7ed;
+    border-left:6px solid #f97316;
+    border-radius:8px;
+}
+
+.recomendacion-box h3{
+    margin-bottom:10px;
+    color:#9a3412;
+}
+
+.recomendacion-box p{
+    font-size:18px;
+}
