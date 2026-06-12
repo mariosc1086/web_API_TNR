@@ -120,11 +120,12 @@ async function calcularProbabilidad() {
         document.getElementById("probabilidad").innerText =
             `${Number(resultado.probabilidad_porcentaje).toFixed(2)}%`;
 
-        document.getElementById("riesgo").innerText =
-            resultado.nivel_riesgo;
+        const riesgoTexto = obtenerSemaforo(resultado.nivel_riesgo);
+
+        document.getElementById("riesgo").innerText = riesgoTexto;
 
         document.getElementById("riesgo").className =
-            "metric-value " + resultado.nivel_riesgo.toLowerCase();
+            "metric-value " + claseRiesgo(resultado.nivel_riesgo);
 
         document.getElementById("clasificacion").innerText =
             resultado.clasificacion === 1 ? "TNR Alta" : "TNR Baja";
@@ -187,3 +188,35 @@ document.addEventListener("change", function(e){
     }
 
 });
+
+function obtenerSemaforo(riesgo) {
+    if (riesgo === "Bajo") {
+        return "🟢 Bajo";
+    }
+    if (riesgo === "Medio") {
+        return "🟡 Medio";
+    }
+    if (riesgo === "Alto") {
+        return "🟠 Alto";
+    }
+    if (riesgo === "Crítico") {
+        return "🔴 Crítico";
+    }
+    return riesgo;
+}
+
+function claseRiesgo(riesgo) {
+    if (riesgo === "Bajo") {
+        return "riesgo-bajo";
+    }
+    if (riesgo === "Medio") {
+        return "riesgo-medio";
+    }
+    if (riesgo === "Alto") {
+        return "riesgo-alto";
+    }
+    if (riesgo === "Crítico") {
+        return "riesgo-critico";
+    }
+    return "";
+}

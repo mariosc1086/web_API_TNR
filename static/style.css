@@ -186,3 +186,23 @@ table td{
 .recomendacion-box p{
     font-size:18px;
 }
+
+.riesgo-bajo{
+    color:#16a34a;
+    font-weight:600;
+}
+
+.riesgo-medio{
+    color:#ca8a04;
+    font-weight:600;
+}
+
+.riesgo-alto{
+    color:#ea580c;
+    font-weight:600;
+}
+
+.riesgo-critico{
+    color:#dc2626;
+    font-weight:700;
+}
