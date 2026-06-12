@@ -111,6 +111,7 @@ async function calcularProbabilidad() {
         const resultado = await response.json();
 
         console.log(resultado);
+        alert(JSON.stringify(resultado));
 
         if (!response.ok) {
             alert(resultado.error);
