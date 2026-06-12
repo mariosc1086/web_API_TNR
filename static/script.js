@@ -110,9 +110,6 @@ async function calcularProbabilidad() {
 
         const resultado = await response.json();
 
-        console.log(resultado);
-        alert(JSON.stringify(resultado));
-
         if (!response.ok) {
             alert(resultado.error);
             return;
@@ -132,8 +129,8 @@ async function calcularProbabilidad() {
         document.getElementById("clasificacion").innerText =
             resultado.clasificacion === 1 ? "TNR Alta" : "TNR No Alta";
 
-        document.getElementById("recomendacion").innerText =
-            resultado.recomendacion;
+        document.getElementById("recomendacion").textContent =
+            resultado.recomendacion || "Sin recomendación disponible.";
 
         construirTabla(resultado.info_conglomerado);
         mostrarVariables(resultado.variables_modelo);
