@@ -127,7 +127,7 @@ async function calcularProbabilidad() {
             "metric-value " + resultado.nivel_riesgo.toLowerCase();
 
         document.getElementById("clasificacion").innerText =
-            resultado.clasificacion === 1 ? "TNR Alta" : "TNR No Alta";
+            resultado.clasificacion === 1 ? "TNR Alta" : "TNR Baja";
 
         document.getElementById("recomendacion").textContent =
             resultado.recomendacion || "Sin recomendación disponible.";
