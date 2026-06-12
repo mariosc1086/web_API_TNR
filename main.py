@@ -93,7 +93,11 @@ async def predict_conglomerado(request: Request):
                 "Sin recomendación disponible."
             )
 
-        info_conglomerado = filtro_ordenado.to_dict(orient="records")
+        info_conglomerado = filtro_ordenado.rename(columns={
+            "TNR_Historica_Cong": "TNR Cong.",
+            "TNR_Historica_Distrito": "TNR Dist.",
+            "TNR_Historica_Departamento": "TNR Dep."
+        }).to_dict(orient="records")
 
         # Convertir valores raros de pandas/numpy a texto/número simple
         info_conglomerado = [
