@@ -18,6 +18,16 @@ def clasificar_riesgo(probabilidad: float) -> str:
     else:
         return "Crítico"
 
+def recomendar_accion(riesgo: str) -> str:
+    if riesgo == "Bajo":
+        return "Continuar con el monitoreo regular del conglomerado. No se requiere intervención adicional."
+    elif riesgo == "Medio":
+        return "Revisar el avance del conglomerado y monitorear posibles ausencias, rechazos o incremento de visitas."
+    elif riesgo == "Alto":
+        return "Priorizar seguimiento del supervisor, reprogramar visitas en horarios alternativos y verificar causas de no respuesta."
+    elif riesgo == "Crítico":
+        return "Activar intervención inmediata: supervisión directa, refuerzo operativo y estrategia de recuperación del conglomerado."
+    return "Sin recomendación disponible."
 
 def predecir_tnr(datos: dict) -> dict:
     df = pd.DataFrame([{
@@ -46,14 +56,5 @@ def predecir_tnr(datos: dict) -> dict:
         "recomendacion": recomendar_accion(riesgo)
     }
 
-def recomendar_accion(riesgo: str) -> str:
-    if riesgo == "Bajo":
-        return "Continuar con el monitoreo regular del conglomerado. No se requiere intervención adicional."
-    elif riesgo == "Medio":
-        return "Revisar el avance del conglomerado y monitorear posibles ausencias, rechazos o incremento de visitas."
-    elif riesgo == "Alto":
-        return "Priorizar seguimiento del supervisor, reprogramar visitas en horarios alternativos y verificar causas de no respuesta."
-    elif riesgo == "Crítico":
-        return "Activar intervención inmediata: supervisión directa, refuerzo operativo y estrategia de recuperación del conglomerado."
-    return "Sin recomendación disponible."
+
 
