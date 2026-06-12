@@ -155,7 +155,14 @@ function construirTabla(info) {
 
     let header = "<tr>";
     columnas.forEach(col => {
-        header += `<th>${col}</th>`;
+
+        let valor = row[col];
+
+        if (!isNaN(valor) && valor !== "") {
+            valor = Number(valor).toFixed(2);
+        }
+
+        filas += `<td>${valor}</td>`;
     });
     header += "</tr>";
 
