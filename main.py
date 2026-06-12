@@ -78,6 +78,21 @@ async def predict_conglomerado(request: Request):
 
         resultado = predecir_tnr(datos_modelo)
 
+        if "recomendacion" not in resultado:
+            riesgo = resultado.get("nivel_riesgo", "")
+
+            recomendaciones = {
+                "Bajo": "Continuar con el monitoreo regular del conglomerado. No se requiere intervención adicional.",
+                "Medio": "Revisar el avance del conglomerado y monitorear posibles ausencias, rechazos o incremento de visitas.",
+                "Alto": "Priorizar seguimiento del supervisor, reprogramar visitas en horarios alternativos y verificar causas de no respuesta.",
+                "Crítico": "Activar intervención inmediata: supervisión directa, refuerzo operativo y estrategia de recuperación del conglomerado."
+            }
+
+            resultado["recomendacion"] = recomendaciones.get(
+                riesgo,
+                "Sin recomendación disponible."
+            )
+
         info_conglomerado = filtro_ordenado.to_dict(orient="records")
 
         # Convertir valores raros de pandas/numpy a texto/número simple
