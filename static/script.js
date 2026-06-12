@@ -152,22 +152,40 @@ function construirTabla(info) {
 
     const columnas = Object.keys(info[0]);
 
+    // Columnas que deben mostrarse con decimales
+    const columnasDecimales = [
+        "TNR Historico por Cong.",
+        "TNR Historico por Dist.",
+        "TNR Historico por Dep.",
+        "Visitas",
+        "TEM"
+    ];
+
     let header = "<tr>";
+
     columnas.forEach(col => {
         header += `<th>${col}</th>`;
     });
+
     header += "</tr>";
 
     let filas = "";
 
     info.forEach(row => {
+
         filas += "<tr>";
 
         columnas.forEach(col => {
 
             let valor = row[col];
 
-            if (!isNaN(valor) && valor !== "" && valor !== null) {
+            // Solo estas columnas tendrán decimales
+            if (
+                columnasDecimales.includes(col) &&
+                !isNaN(valor) &&
+                valor !== "" &&
+                valor !== null
+            ) {
                 valor = Number(valor).toFixed(2);
             }
 
