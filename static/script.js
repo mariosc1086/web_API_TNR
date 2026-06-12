@@ -140,7 +140,6 @@ async function calcularProbabilidad() {
     }
 }
 
-
 function construirTabla(info) {
 
     const tabla = document.getElementById("tabla-info");
@@ -155,28 +154,32 @@ function construirTabla(info) {
 
     let header = "<tr>";
     columnas.forEach(col => {
-
-        let valor = row[col];
-
-        if (!isNaN(valor) && valor !== "") {
-            valor = Number(valor).toFixed(2);
-        }
-
-        filas += `<td>${valor}</td>`;
+        header += `<th>${col}</th>`;
     });
     header += "</tr>";
 
     let filas = "";
+
     info.forEach(row => {
         filas += "<tr>";
+
         columnas.forEach(col => {
-            filas += `<td>${row[col]}</td>`;
+
+            let valor = row[col];
+
+            if (!isNaN(valor) && valor !== "" && valor !== null) {
+                valor = Number(valor).toFixed(2);
+            }
+
+            filas += `<td>${valor}</td>`;
         });
+
         filas += "</tr>";
     });
 
     tabla.innerHTML = header + filas;
 }
+
 
 document.addEventListener("change", function(e){
 
