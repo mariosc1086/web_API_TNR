@@ -380,11 +380,19 @@ table td{
         white-space:nowrap;
     }
 
-    #tabla-info-mobile td:first-child{
+    #tabla-info-mobile td:first-child,
+    #tabla-info-mobile th:first-child{
         text-align:left;
         background:#f9fafb;
         position:sticky;
         left:0;
-        z-index:1;
+        z-index:2;
+        min-width:170px;
+        max-width:170px;
+        white-space:normal;
+    }
+    #tabla-info-mobile td,
+    #tabla-info-mobile th{
+        min-width:90px;
     }
 }
