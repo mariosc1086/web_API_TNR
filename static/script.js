@@ -228,20 +228,18 @@ function construirTablaMobile(info) {
 
     const variables = [
         "Meses",
-        "TNR",
-        "TNR Cong.",
-        "TNR Dist.",
-        "TNR Dep.",
+        "TNR Historico por Cong.",
+        "TNR Historico por Dist.",
+        "TNR Historico por Dep.",
         "Visitas",
         "TEM",
         "N_HOGAR"
     ];
 
     const columnasDecimales = [
-        "TNR",
-        "TNR Cong.",
-        "TNR Dist.",
-        "TNR Dep.",
+        "TNR Historico por Cong.",
+        "TNR Historico por Dist.",
+        "TNR Historico por Dep.",
         "Visitas",
         "TEM"
     ];
