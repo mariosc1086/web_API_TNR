@@ -366,28 +366,21 @@ table td{
     }
 
     #tabla-info-mobile{
-        width:100%;
-        border-collapse:collapse;
-        background:white;
-        font-size:13px;
-    }
-
-    #tabla-info-mobile th,
-    #tabla-info-mobile td{
-        border:1px solid #ddd;
-        padding:10px;
-        text-align:center;
-        color:#111827;
-        background:white;
-        min-width:80px;
-        white-space:normal;
+    width:100%;
+    table-layout:fixed;
     }
 
     #tabla-info-mobile th:first-child,
     #tabla-info-mobile td:first-child{
-        width:25%;
+        width:40%;
         text-align:left;
         font-weight:bold;
         background:#f3f4f6;
+    }
+
+    #tabla-info-mobile th:not(:first-child),
+    #tabla-info-mobile td:not(:first-child){
+        width:15%;
+        text-align:center;
     }
 }
