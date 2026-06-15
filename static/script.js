@@ -134,6 +134,7 @@ async function calcularProbabilidad() {
             resultado.recomendacion || "Sin recomendación disponible.";
 
         construirTabla(resultado.info_conglomerado);
+        construirTablaMobile(resultado.info_conglomerado);
 
     } catch (error) {
         alert("Error al conectar con el servidor: " + error);
@@ -198,6 +199,88 @@ function construirTabla(info) {
     tabla.innerHTML = header + filas;
 }
 
+function construirTablaMobile(info) {
+
+    const tabla = document.getElementById("tabla-info-mobile");
+    tabla.innerHTML = "";
+
+    if (!info || info.length === 0) {
+        tabla.innerHTML = "<tr><td>No hay información disponible</td></tr>";
+        return;
+    }
+
+    const ordenMeses = {
+        "ene": 1, "feb": 2, "mar": 3, "abr": 4,
+        "may": 5, "jun": 6, "jul": 7, "ago": 8,
+        "sep": 9, "oct": 10, "nov": 11, "dic": 12
+    };
+
+    const datosOrdenados = [...info].sort((a, b) => {
+        if (Number(a["Año"]) !== Number(b["Año"])) {
+            return Number(a["Año"]) - Number(b["Año"]);
+        }
+        return ordenMeses[a["Meses"]] - ordenMeses[b["Meses"]];
+    });
+
+    const columnasPeriodo = datosOrdenados.map(row =>
+        `${row["Año"]}`
+    );
+
+    const variables = [
+        "Meses",
+        "TNR",
+        "TNR Cong.",
+        "TNR Dist.",
+        "TNR Dep.",
+        "Visitas",
+        "TEM",
+        "N_HOGAR"
+    ];
+
+    const columnasDecimales = [
+        "TNR",
+        "TNR Cong.",
+        "TNR Dist.",
+        "TNR Dep.",
+        "Visitas",
+        "TEM"
+    ];
+
+    let header = "<tr><th>Variable</th>";
+
+    columnasPeriodo.forEach(periodo => {
+        header += `<th>${periodo}</th>`;
+    });
+
+    header += "</tr>";
+
+    let filas = "";
+
+    variables.forEach(variable => {
+
+        filas += `<tr><td><strong>${variable}</strong></td>`;
+
+        datosOrdenados.forEach(row => {
+
+            let valor = row[variable];
+
+            if (
+                columnasDecimales.includes(variable) &&
+                !isNaN(valor) &&
+                valor !== "" &&
+                valor !== null
+            ) {
+                valor = Number(valor).toFixed(2);
+            }
+
+            filas += `<td>${valor ?? ""}</td>`;
+        });
+
+        filas += "</tr>";
+    });
+
+    tabla.innerHTML = header + filas;
+}
 
 document.addEventListener("change", function(e){
 

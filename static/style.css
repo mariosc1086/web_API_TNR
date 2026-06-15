@@ -341,3 +341,50 @@ table td{
         font-size:12px;
     }
 }
+
+.tabla-mobile-container{
+    display:none;
+}
+
+@media (max-width: 768px){
+
+    .table-container{
+        display:none;
+    }
+
+    .tabla-mobile-container{
+        display:block;
+        overflow-x:auto;
+        margin-top:15px;
+    }
+
+    #tabla-info-mobile{
+        width:100%;
+        border-collapse:collapse;
+        background:white;
+        font-size:13px;
+    }
+
+    #tabla-info-mobile th{
+        background:#f3f4f6;
+        border:1px solid #ddd;
+        padding:8px;
+        text-align:center;
+        white-space:nowrap;
+    }
+
+    #tabla-info-mobile td{
+        border:1px solid #ddd;
+        padding:8px;
+        text-align:center;
+        white-space:nowrap;
+    }
+
+    #tabla-info-mobile td:first-child{
+        text-align:left;
+        background:#f9fafb;
+        position:sticky;
+        left:0;
+        z-index:1;
+    }
+}
