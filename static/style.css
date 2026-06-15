@@ -352,7 +352,7 @@ table td{
     display:none;
 }
 
-@media (max-width: 768px){
+@media (max-width:768px){
 
     .table-container{
         display:none;
@@ -366,21 +366,39 @@ table td{
     }
 
     #tabla-info-mobile{
-    width:100%;
-    table-layout:fixed;
+        border-collapse:collapse;
+        table-layout:fixed;
+        background:white;
+        font-size:12px;
     }
 
+    #tabla-info-mobile th,
+    #tabla-info-mobile td{
+        border:1px solid #ddd;
+        padding:6px 4px;
+        text-align:center;
+        vertical-align:middle;
+        white-space:normal;
+        word-break:break-word;
+    }
+
+    /* Columna de variables */
     #tabla-info-mobile th:first-child,
     #tabla-info-mobile td:first-child{
-        width:40%;
+        width:110px;
+        min-width:110px;
+        max-width:110px;
+
         text-align:left;
         font-weight:bold;
         background:#f3f4f6;
     }
 
+    /* Columnas de años */
     #tabla-info-mobile th:not(:first-child),
     #tabla-info-mobile td:not(:first-child){
-        width:15%;
-        text-align:center;
+        width:55px;
+        min-width:55px;
+        max-width:55px;
     }
 }
