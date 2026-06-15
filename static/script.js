@@ -254,16 +254,16 @@ function construirTablaMobile(info) {
 
     let filas = "";
 
-    variables.forEach(variable => {
+    variables.forEach(item => {
 
-        filas += `<tr><td><strong>${variable}</strong></td>`;
+        filas += `<tr><td><strong>${item.etiqueta}</strong></td>`;
 
         datosOrdenados.forEach(row => {
 
-            let valor = row[variable];
+            let valor = row[item.campo];
 
             if (
-                columnasDecimales.includes(variable) &&
+                columnasDecimales.includes(item.etiqueta) &&
                 !isNaN(valor) &&
                 valor !== "" &&
                 valor !== null

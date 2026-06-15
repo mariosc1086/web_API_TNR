@@ -385,9 +385,9 @@ table td{
 
     #tabla-info-mobile th:first-child,
     #tabla-info-mobile td:first-child{
+        width:34%;
         text-align:left;
         font-weight:bold;
         background:#f3f4f6;
-        min-width:160px;
     }
 }
