@@ -368,33 +368,34 @@ table td{
     #tabla-info-mobile{
         border-collapse:collapse;
         table-layout:fixed;
+        width:330px;
+        min-width:330px;
+        max-width:330px;
         background:white;
-        font-size:12px;
+        font-size:11px;
     }
 
     #tabla-info-mobile th,
     #tabla-info-mobile td{
         border:1px solid #ddd;
-        padding:6px 4px;
+        padding:6px 3px;
         text-align:center;
         vertical-align:middle;
+        overflow:hidden;
         white-space:normal;
         word-break:break-word;
     }
 
-    /* Columna de variables */
     #tabla-info-mobile th:first-child,
     #tabla-info-mobile td:first-child{
         width:110px;
         min-width:110px;
         max-width:110px;
-
         text-align:left;
         font-weight:bold;
         background:#f3f4f6;
     }
 
-    /* Columnas de años */
     #tabla-info-mobile th:not(:first-child),
     #tabla-info-mobile td:not(:first-child){
         width:55px;
