@@ -233,20 +233,21 @@ function construirTablaMobile(info) {
         "Distrito",
         "Geografico",
         "Estratos",
-        "Conglomerado",              
+        "Conglomerado",
+        "Altitud",              
         "TNR Historico por Cong.",
         "TNR Historico por Dist.",
         "TNR Historico por Dep.",
         "Visitas",
         "TEM",
         "N_HOGAR",
-        "PromPersHogar",
-        "PromMuj12_49",
-        "PromMen_12",
-        "PromMen_6",
-        "PromMen_5",
-        "PromMen_3",
-        "Duracion_Prom",
+        "TotalPersHogar",
+        "TotalMuj12_49",
+        "TotalMen_12",
+        "TotalMen_6",
+        "TotalMen_5",
+        "TotalMen_3",
+        "DuracionPromedio",
         "TNR_ALTA" 
     ];
 
@@ -256,13 +257,13 @@ function construirTablaMobile(info) {
         "TNR Historico por Dep.",
         "Visitas",
         "TEM",
-        "PromPersHogar",
-        "PromMuj12_49",
-        "PromMen_12",
-        "PromMen_6",
-        "PromMen_5",
-        "PromMen_3",
-        "Duracion_Prom"
+        "TotalPersHogar",
+        "TotalMuj12_49",
+        "TotalMen_12",
+        "TotalMen_6",
+        "TotalMen_5",
+        "TotalMen_3",
+        "DuracionPromedio"
     ];
 
     let header = "<tr><th>Variable</th>";
