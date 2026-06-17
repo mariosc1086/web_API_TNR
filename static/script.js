@@ -226,8 +226,7 @@ function construirTablaMobile(info) {
         `${row["Año"]}`
     );
 
-    const variables = [
-        "Año",                      
+    const variables = [                     
         "Meses",                     
         "Departamento",
         "Provincia",                 
