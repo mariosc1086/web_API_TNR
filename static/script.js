@@ -227,7 +227,14 @@ function construirTablaMobile(info) {
     );
 
     const variables = [
-        "Meses",
+        "Año",                      
+        "Meses",                     
+        "Departamento",
+        "Provincia",                 
+        "Distrito",
+        "Geografico",
+        "Estratos",
+        "Conglomerado",              
         "TNR Historico por Cong.",
         "TNR Historico por Dist.",
         "TNR Historico por Dep.",
@@ -239,7 +246,8 @@ function construirTablaMobile(info) {
         "PromMen_12",
         "PromMen_6",
         "PromMen_5",
-        "PromMen_3"     
+        "PromMen_3",
+        "TNR_ALTA" 
     ];
 
     const columnasDecimales = [
