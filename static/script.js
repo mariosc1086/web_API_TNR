@@ -246,6 +246,7 @@ function construirTablaMobile(info) {
         "PromMen_6",
         "PromMen_5",
         "PromMen_3",
+        "Duracion_Prom",
         "TNR_ALTA" 
     ];
 
@@ -260,7 +261,8 @@ function construirTablaMobile(info) {
         "PromMen_12",
         "PromMen_6",
         "PromMen_5",
-        "PromMen_3"
+        "PromMen_3",
+        "Duracion_Prom"
     ];
 
     let header = "<tr><th>Variable</th>";
