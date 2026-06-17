@@ -233,7 +233,13 @@ function construirTablaMobile(info) {
         "TNR Historico por Dep.",
         "Visitas",
         "TEM",
-        "N_HOGAR"
+        "N_HOGAR",
+        "PromPersHogar",
+        "PromMuj12_49",
+        "PromMen_12",
+        "PromMen_6",
+        "PromMen_5",
+        "PromMen_3"     
     ];
 
     const columnasDecimales = [
@@ -241,7 +247,13 @@ function construirTablaMobile(info) {
         "TNR Historico por Dist.",
         "TNR Historico por Dep.",
         "Visitas",
-        "TEM"
+        "TEM",
+        "PromPersHogar",
+        "PromMuj12_49",
+        "PromMen_12",
+        "PromMen_6",
+        "PromMen_5",
+        "PromMen_3"
     ];
 
     let header = "<tr><th>Variable</th>";
