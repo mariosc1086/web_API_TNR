@@ -282,12 +282,6 @@ function construirTablaMobile(info) {
         "Visitas",
         "TEM",
         "TNR",
-        "TotalPersHogar",
-        "TotalMuj12_49",
-        "TotalMen_12",
-        "TotalMen_6",
-        "TotalMen_5",
-        "TotalMen_3",
         "DuracionPromedio"
     ];
 
