@@ -174,8 +174,7 @@ function construirTabla(info) {
         { etiqueta: "Total de menores < 5", campo: "TotalMen_5" },
         { etiqueta: "Total de menores < 3", campo: "TotalMen_3" },
         { etiqueta: "Duración promedio de la entrevista", campo: "DuracionPromedio" },
-        { etiqueta: "Tasa de No Respuesta", campo: "TNR" },
-        { etiqueta: "Clasificación", campo: "TNR_ALTA" }  
+        { etiqueta: "Tasa de No Respuesta", campo: "TNR" } 
     ];
 
     const columnasDecimales = [
@@ -273,8 +272,7 @@ function construirTablaMobile(info) {
         { etiqueta: "Total de menores < 5", campo: "TotalMen_5" },
         { etiqueta: "Total de menores < 3", campo: "TotalMen_3" },
         { etiqueta: "Duración promedio de la entrevista", campo: "DuracionPromedio" },
-        { etiqueta: "Tasa de No Respuesta", campo: "TNR" },
-        { etiqueta: "Clasificación", campo: "TNR_ALTA" }  
+        { etiqueta: "Tasa de No Respuesta", campo: "TNR" } 
     ];
 
     const columnasDecimales = [
