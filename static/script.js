@@ -278,14 +278,14 @@ function construirTablaMobile(info) {
 
     variables.forEach(variable => {
 
-        filas += `<tr><td><strong>${variable}</strong></td>`;
+        filas += `<tr><td><strong>${variable.etiqueta}</strong></td>`;
 
         datosOrdenados.forEach(row => {
 
-            let valor = row[variable];
+            let valor = row[variable.campo];
 
             if (
-                columnasDecimales.includes(variable) &&
+                columnasDecimales.includes(variable.campo) &&
                 !isNaN(valor) &&
                 valor !== "" &&
                 valor !== null
