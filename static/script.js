@@ -251,6 +251,32 @@ function construirTablaMobile(info) {
         "TNR_ALTA" 
     ];
 
+    const variables = [
+
+        { etiqueta: "Mes", campo: "Meses"},
+        { etiqueta: "Departamento", campo: "Departamento"},
+        { etiqueta: "Provincia", campo: "Provincia" },
+        { etiqueta: "Distrito", campo: "Distrito" },
+        { etiqueta: "Dominio Geografico", campo: "Geografico" },
+        { etiqueta: "Estrato SE", campo: "Estratos" },
+        { etiqueta: "Conglomerado", campo: "Conglomerado" },
+        { etiqueta: "Altitud (m2)", campo: "Altitud" },
+        { etiqueta: "TNR Historico por Cong.", campo: "TNR Historico por Cong." },
+        { etiqueta: "TNR Historico por Dist.", campo: "TNR Historico por Dist." },
+        { etiqueta: "TNR Historico por Dep.", campo: "TNR Historico por Dep." },
+        { etiqueta: "Promedio de Visitas", campo: "Visitas" },
+        { etiqueta: "Tasa de Error de Marco", campo: "TEM" },
+        { etiqueta: "Número de Hogares", campo: "N_HOGAR" },
+        { etiqueta: "Total de Personas en el Hogar", campo: "TotalPersHogar" },
+        { etiqueta: "Total de Mujeres entre 12 a 49", campo: "TotalMuj12_49" },
+        { etiqueta: "Total de menores < 12", campo: "TotalMen_12" },
+        { etiqueta: "Total de menores < 6", campo: "TotalMen_6" },
+        { etiqueta: "Total de menores < 5", campo: "TotalMen_5" },
+        { etiqueta: "Total de menores < 3", campo: "TotalMen_3" },
+        { etiqueta: "Duración promedio de la entrevista", campo: "DuracionPromedio" },
+        { etiqueta: "Clasificación", campo: "TNR_ALTA" }  
+    ];
+
     const columnasDecimales = [
         "TNR Historico por Cong.",
         "TNR Historico por Dist.",
