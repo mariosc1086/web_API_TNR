@@ -152,6 +152,7 @@ function construirTabla(info) {
     }
 
     const variables = [
+        { etiqueta: "Año", campo: "Año"},
         { etiqueta: "Mes", campo: "Meses"},
         { etiqueta: "Departamento", campo: "Departamento"},
         { etiqueta: "Provincia", campo: "Provincia" },
@@ -173,6 +174,7 @@ function construirTabla(info) {
         { etiqueta: "Total de menores < 5", campo: "TotalMen_5" },
         { etiqueta: "Total de menores < 3", campo: "TotalMen_3" },
         { etiqueta: "Duración promedio de la entrevista", campo: "DuracionPromedio" },
+        { etiqueta: "Tasa de No Respuesta", campo: "TNR" },
         { etiqueta: "Clasificación", campo: "TNR_ALTA" }  
     ];
 
@@ -181,13 +183,8 @@ function construirTabla(info) {
         "TNR Historico por Dist.",
         "TNR Historico por Dep.",
         "Visitas",
-        "TEM",
-        "TotalPersHogar",
-        "TotalMuj12_49",
-        "TotalMen_12",
-        "TotalMen_6",
-        "TotalMen_5",
-        "TotalMen_3",
+        "TEM",  
+        "TNR",
         "DuracionPromedio"
     ];
 
@@ -276,6 +273,7 @@ function construirTablaMobile(info) {
         { etiqueta: "Total de menores < 5", campo: "TotalMen_5" },
         { etiqueta: "Total de menores < 3", campo: "TotalMen_3" },
         { etiqueta: "Duración promedio de la entrevista", campo: "DuracionPromedio" },
+        { etiqueta: "Tasa de No Respuesta", campo: "TNR" },
         { etiqueta: "Clasificación", campo: "TNR_ALTA" }  
     ];
 
@@ -285,6 +283,7 @@ function construirTablaMobile(info) {
         "TNR Historico por Dep.",
         "Visitas",
         "TEM",
+        "TNR",
         "TotalPersHogar",
         "TotalMuj12_49",
         "TotalMen_12",
