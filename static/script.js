@@ -226,33 +226,7 @@ function construirTablaMobile(info) {
         `${row["Año"]}`
     );
 
-    const variables = [                     
-        "Meses",                     
-        "Departamento",
-        "Provincia",                 
-        "Distrito",
-        "Geografico",
-        "Estratos",
-        "Conglomerado",
-        "Altitud",              
-        "TNR Historico por Cong.",
-        "TNR Historico por Dist.",
-        "TNR Historico por Dep.",
-        "Visitas",
-        "TEM",
-        "N_HOGAR",
-        "TotalPersHogar",
-        "TotalMuj12_49",
-        "TotalMen_12",
-        "TotalMen_6",
-        "TotalMen_5",
-        "TotalMen_3",
-        "DuracionPromedio",
-        "TNR_ALTA" 
-    ];
-
     const variables = [
-
         { etiqueta: "Mes", campo: "Meses"},
         { etiqueta: "Departamento", campo: "Departamento"},
         { etiqueta: "Provincia", campo: "Provincia" },
