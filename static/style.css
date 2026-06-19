@@ -153,6 +153,12 @@ body{
     color:#0b2f75;
 }
 
+.logo-inei{
+    height:110px;
+    width:auto;
+    object-fit:contain;
+} 
+
 .logo-text{
     font-size:62px;
     font-weight:900;
@@ -408,6 +414,10 @@ table td{
     .logo-box{
         justify-content:center;
         margin-bottom:14px;
+    }     
+    
+    .logo-inei{
+        height:80px;
     }
 
     .logo-text{
