@@ -160,7 +160,7 @@ function construirTabla(info) {
         { etiqueta: "Dominio Geografico", campo: "Geografico" },
         { etiqueta: "Estrato SE", campo: "Estratos" },
         { etiqueta: "Conglomerado", campo: "Conglomerado" },
-        { etiqueta: "Altitud (m2)", campo: "Altitud" },
+        { etiqueta: "Altitud (msnm)", campo: "Altitud" },
         { etiqueta: "TNR Historico por Cong.", campo: "TNR Historico por Cong." },
         { etiqueta: "TNR Historico por Dist.", campo: "TNR Historico por Dist." },
         { etiqueta: "TNR Historico por Dep.", campo: "TNR Historico por Dep." },
