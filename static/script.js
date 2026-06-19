@@ -1,28 +1,20 @@
 let ubicaciones = {};
+let graficoTNR = null;
 
 window.onload = async function () {
-
     const response = await fetch("/ubicaciones");
     ubicaciones = await response.json();
-
     cargarDepartamentos();
 };
 
 function cargarDepartamentos() {
-
-    const depSelect =
-        document.getElementById("departamento");
-
+    const depSelect = document.getElementById("departamento");
     depSelect.innerHTML = "";
 
     Object.keys(ubicaciones).forEach(dep => {
-
-        const option =
-            document.createElement("option");
-
+        const option = document.createElement("option");
         option.value = dep;
         option.text = dep;
-
         depSelect.appendChild(option);
     });
 
@@ -30,25 +22,14 @@ function cargarDepartamentos() {
 }
 
 function cargarProvincias() {
-
-    const dep =
-        document.getElementById("departamento").value;
-
-    const provSelect =
-        document.getElementById("provincia");
-
+    const dep = document.getElementById("departamento").value;
+    const provSelect = document.getElementById("provincia");
     provSelect.innerHTML = "";
 
-    Object.keys(
-        ubicaciones[dep]
-    ).forEach(prov => {
-
-        const option =
-            document.createElement("option");
-
+    Object.keys(ubicaciones[dep]).forEach(prov => {
+        const option = document.createElement("option");
         option.value = prov;
         option.text = prov;
-
         provSelect.appendChild(option);
     });
 
@@ -56,26 +37,16 @@ function cargarProvincias() {
 }
 
 function cargarDistritos() {
-
-    const dep =
-        document.getElementById("departamento").value;
-
-    const prov =
-        document.getElementById("provincia").value;
-
-    const distSelect =
-        document.getElementById("distrito");
+    const dep = document.getElementById("departamento").value;
+    const prov = document.getElementById("provincia").value;
+    const distSelect = document.getElementById("distrito");
 
     distSelect.innerHTML = "";
 
     ubicaciones[dep][prov].forEach(dist => {
-
-        const option =
-            document.createElement("option");
-
+        const option = document.createElement("option");
         option.value = dist;
         option.text = dist;
-
         distSelect.appendChild(option);
     });
 }
@@ -102,9 +73,7 @@ async function calcularProbabilidad() {
     try {
         const response = await fetch("/predict_conglomerado", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify(datosConsulta)
         });
 
@@ -120,25 +89,95 @@ async function calcularProbabilidad() {
         document.getElementById("probabilidad").innerText =
             `${Number(resultado.probabilidad_porcentaje).toFixed(2)}%`;
 
-        const riesgoTexto = obtenerSemaforo(resultado.nivel_riesgo);
-
-        document.getElementById("riesgo").innerText = riesgoTexto;
+        document.getElementById("riesgo").innerText =
+            obtenerSemaforo(resultado.nivel_riesgo);
 
         document.getElementById("riesgo").className =
             "metric-value " + claseRiesgo(resultado.nivel_riesgo);
 
         document.getElementById("clasificacion").innerText =
-            resultado.clasificacion === 1 ? "TNR Alta" : "TNR Baja";
+            resultado.clasificacion === 1 ? "TNR Alta" : "TNR No Alta";
 
-        document.getElementById("recomendacion").textContent =
+        document.getElementById("recomendacion").innerText =
             resultado.recomendacion || "Sin recomendación disponible.";
 
         construirTabla(resultado.info_conglomerado);
         construirTablaMobile(resultado.info_conglomerado);
+        construirGraficoTNR(resultado.info_conglomerado);
 
     } catch (error) {
         alert("Error al conectar con el servidor: " + error);
     }
+}
+
+function obtenerSemaforo(riesgo) {
+    if (riesgo === "Bajo") return "🟢 Bajo";
+    if (riesgo === "Medio") return "🟡 Medio";
+    if (riesgo === "Alto") return "🟠 Alto";
+    if (riesgo === "Crítico") return "🔴 Crítico";
+    return riesgo;
+}
+
+function claseRiesgo(riesgo) {
+    if (riesgo === "Bajo") return "riesgo-bajo";
+    if (riesgo === "Medio") return "riesgo-medio";
+    if (riesgo === "Alto") return "riesgo-alto";
+    if (riesgo === "Crítico") return "riesgo-critico";
+    return "";
+}
+
+const variablesTabla = [
+    { etiqueta: "Año", campo: "Año" },
+    { etiqueta: "Mes", campo: "Meses" },
+    { etiqueta: "Departamento", campo: "Departamento" },
+    { etiqueta: "Provincia", campo: "Provincia" },
+    { etiqueta: "Distrito", campo: "Distrito" },
+    { etiqueta: "Dominio Geográfico", campo: "Geografico" },
+    { etiqueta: "Estrato SE", campo: "Estratos" },
+    { etiqueta: "Conglomerado", campo: "Conglomerado" },
+    { etiqueta: "Altitud (msnm)", campo: "Altitud" },
+    { etiqueta: "TNR Histórico por Cong.", campo: "TNR Historico por Cong." },
+    { etiqueta: "TNR Histórico por Dist.", campo: "TNR Historico por Dist." },
+    { etiqueta: "TNR Histórico por Dep.", campo: "TNR Historico por Dep." },
+    { etiqueta: "Promedio de Visitas", campo: "Visitas" },
+    { etiqueta: "Tasa de Error de Marco", campo: "TEM" },
+    { etiqueta: "Número de Hogares", campo: "N_HOGAR" },
+    { etiqueta: "Total de Personas en el Hogar", campo: "TotalPersHogar" },
+    { etiqueta: "Total de Mujeres entre 12 a 49", campo: "TotalMuj12_49" },
+    { etiqueta: "Total de menores < 12", campo: "TotalMen_12" },
+    { etiqueta: "Total de menores < 6", campo: "TotalMen_6" },
+    { etiqueta: "Total de menores < 5", campo: "TotalMen_5" },
+    { etiqueta: "Total de menores < 3", campo: "TotalMen_3" },
+    { etiqueta: "Duración promedio de la entrevista", campo: "DuracionPromedio" },
+    { etiqueta: "Tasa de No Respuesta", campo: "TNR" }
+];
+
+const columnasDecimales = [
+    "TNR Historico por Cong.",
+    "TNR Historico por Dist.",
+    "TNR Historico por Dep.",
+    "Visitas",
+    "TEM",
+    "TotalPersHogar",
+    "TotalMuj12_49",
+    "TotalMen_12",
+    "TotalMen_6",
+    "TotalMen_5",
+    "TotalMen_3",
+    "DuracionPromedio",
+    "TNR"
+];
+
+function formatearValor(campo, valor) {
+    if (
+        columnasDecimales.includes(campo) &&
+        !isNaN(valor) &&
+        valor !== "" &&
+        valor !== null
+    ) {
+        return Number(valor).toFixed(2);
+    }
+    return valor ?? "";
 }
 
 function construirTabla(info) {
@@ -151,70 +190,20 @@ function construirTabla(info) {
         return;
     }
 
-    const variables = [
-        { etiqueta: "Año", campo: "Año"},
-        { etiqueta: "Mes", campo: "Meses"},
-        { etiqueta: "Departamento", campo: "Departamento"},
-        { etiqueta: "Provincia", campo: "Provincia" },
-        { etiqueta: "Distrito", campo: "Distrito" },
-        { etiqueta: "Dominio Geografico", campo: "Geografico" },
-        { etiqueta: "Estrato SE", campo: "Estratos" },
-        { etiqueta: "Conglomerado", campo: "Conglomerado" },
-        { etiqueta: "Altitud (msnm)", campo: "Altitud" },
-        { etiqueta: "TNR Historico por Cong.", campo: "TNR Historico por Cong." },
-        { etiqueta: "TNR Historico por Dist.", campo: "TNR Historico por Dist." },
-        { etiqueta: "TNR Historico por Dep.", campo: "TNR Historico por Dep." },
-        { etiqueta: "Promedio de Visitas", campo: "Visitas" },
-        { etiqueta: "Tasa de Error de Marco", campo: "TEM" },
-        { etiqueta: "Número de Hogares", campo: "N_HOGAR" },
-        { etiqueta: "Total de Personas en el Hogar", campo: "TotalPersHogar" },
-        { etiqueta: "Total de Mujeres entre 12 a 49", campo: "TotalMuj12_49" },
-        { etiqueta: "Total de menores < 12", campo: "TotalMen_12" },
-        { etiqueta: "Total de menores < 6", campo: "TotalMen_6" },
-        { etiqueta: "Total de menores < 5", campo: "TotalMen_5" },
-        { etiqueta: "Total de menores < 3", campo: "TotalMen_3" },
-        { etiqueta: "Duración promedio de la entrevista", campo: "DuracionPromedio" },
-        { etiqueta: "Tasa de No Respuesta", campo: "TNR" } 
-    ];
-
-    const columnasDecimales = [
-        "TNR Historico por Cong.",
-        "TNR Historico por Dist.",
-        "TNR Historico por Dep.",
-        "Visitas",
-        "TEM",  
-        "TNR",
-        "DuracionPromedio"
-    ];
-
     let header = "<tr>";
-
-    variables.forEach(item => {
+    variablesTabla.forEach(item => {
         header += `<th>${item.etiqueta}</th>`;
     });
-
     header += "</tr>";
 
     let filas = "";
 
     info.forEach(row => {
-
         filas += "<tr>";
 
-        variables.forEach(item => {
-
-            let valor = row[item.campo];
-
-            if (
-                columnasDecimales.includes(item.campo) &&
-                !isNaN(valor) &&
-                valor !== "" &&
-                valor !== null
-            ) {
-                valor = Number(valor).toFixed(2);
-            }
-
-            filas += `<td>${valor ?? ""}</td>`;
+        variablesTabla.forEach(item => {
+            const valor = formatearValor(item.campo, row[item.campo]);
+            filas += `<td>${valor}</td>`;
         });
 
         filas += "</tr>";
@@ -246,79 +235,116 @@ function construirTablaMobile(info) {
         return ordenMeses[a["Meses"]] - ordenMeses[b["Meses"]];
     });
 
-    const columnasPeriodo = datosOrdenados.map(row =>
-        `${row["Año"]}`
-    );
+    const columnasPeriodo = datosOrdenados.map(row => `${row["Año"]}`);
 
-    const variables = [
-        { etiqueta: "Mes", campo: "Meses"},
-        { etiqueta: "Departamento", campo: "Departamento"},
-        { etiqueta: "Provincia", campo: "Provincia" },
-        { etiqueta: "Distrito", campo: "Distrito" },
-        { etiqueta: "Dominio Geografico", campo: "Geografico" },
-        { etiqueta: "Estrato SE", campo: "Estratos" },
-        { etiqueta: "Conglomerado", campo: "Conglomerado" },
-        { etiqueta: "Altitud (msnm)", campo: "Altitud" },
-        { etiqueta: "TNR Historico por Cong.", campo: "TNR Historico por Cong." },
-        { etiqueta: "TNR Historico por Dist.", campo: "TNR Historico por Dist." },
-        { etiqueta: "TNR Historico por Dep.", campo: "TNR Historico por Dep." },
-        { etiqueta: "Promedio de Visitas", campo: "Visitas" },
-        { etiqueta: "Tasa de Error de Marco", campo: "TEM" },
-        { etiqueta: "Número de Hogares", campo: "N_HOGAR" },
-        { etiqueta: "Total de Personas en el Hogar", campo: "TotalPersHogar" },
-        { etiqueta: "Total de Mujeres entre 12 a 49", campo: "TotalMuj12_49" },
-        { etiqueta: "Total de menores < 12", campo: "TotalMen_12" },
-        { etiqueta: "Total de menores < 6", campo: "TotalMen_6" },
-        { etiqueta: "Total de menores < 5", campo: "TotalMen_5" },
-        { etiqueta: "Total de menores < 3", campo: "TotalMen_3" },
-        { etiqueta: "Duración promedio de la entrevista", campo: "DuracionPromedio" },
-        { etiqueta: "Tasa de No Respuesta", campo: "TNR" } 
-    ];
-
-    const columnasDecimales = [
-        "TNR Historico por Cong.",
-        "TNR Historico por Dist.",
-        "TNR Historico por Dep.",
-        "Visitas",
-        "TEM",
-        "TNR",
-        "DuracionPromedio"
+    const variablesMobile = [
+        { etiqueta: "Mes", campo: "Meses" },
+        { etiqueta: "TNR C.", campo: "TNR Historico por Cong." },
+        { etiqueta: "TNR D.", campo: "TNR Historico por Dist." },
+        { etiqueta: "TNR Dep.", campo: "TNR Historico por Dep." },
+        { etiqueta: "Vis.", campo: "Visitas" },
+        { etiqueta: "TEM", campo: "TEM" },
+        { etiqueta: "Hog.", campo: "N_HOGAR" },
+        { etiqueta: "Pers.", campo: "TotalPersHogar" },
+        { etiqueta: "Muj.", campo: "TotalMuj12_49" },
+        { etiqueta: "Men<12", campo: "TotalMen_12" },
+        { etiqueta: "Men<6", campo: "TotalMen_6" },
+        { etiqueta: "Men<5", campo: "TotalMen_5" },
+        { etiqueta: "Men<3", campo: "TotalMen_3" },
+        { etiqueta: "Dur.", campo: "DuracionPromedio" },
+        { etiqueta: "TNR", campo: "TNR" }
     ];
 
     let header = "<tr><th>Variable</th>";
-
     columnasPeriodo.forEach(periodo => {
         header += `<th>${periodo}</th>`;
     });
-
     header += "</tr>";
 
     let filas = "";
 
-    variables.forEach(variable => {
-
-        filas += `<tr><td><strong>${variable.etiqueta}</strong></td>`;
+    variablesMobile.forEach(item => {
+        filas += `<tr><td><strong>${item.etiqueta}</strong></td>`;
 
         datosOrdenados.forEach(row => {
-
-            let valor = row[variable.campo];
-
-            if (
-                columnasDecimales.includes(variable.campo) &&
-                !isNaN(valor) &&
-                valor !== "" &&
-                valor !== null
-            ) {
-                valor = Number(valor).toFixed(2);
-            }
-
-            filas += `<td>${valor ?? ""}</td>`;
+            const valor = formatearValor(item.campo, row[item.campo]);
+            filas += `<td>${valor}</td>`;
         });
 
         filas += "</tr>";
     });
 
     tabla.innerHTML = header + filas;
+}
+
+function construirGraficoTNR(info) {
+
+    if (!info || info.length === 0) return;
+
+    const ordenMeses = {
+        "ene": 1, "feb": 2, "mar": 3, "abr": 4,
+        "may": 5, "jun": 6, "jul": 7, "ago": 8,
+        "sep": 9, "oct": 10, "nov": 11, "dic": 12
+    };
+
+    const datosOrdenados = [...info].sort((a, b) => {
+        if (Number(a["Año"]) !== Number(b["Año"])) {
+            return Number(a["Año"]) - Number(b["Año"]);
+        }
+        return ordenMeses[a["Meses"]] - ordenMeses[b["Meses"]];
+    });
+
+    const etiquetas = datosOrdenados.map(row => `${row["Año"]}-${row["Meses"]}`);
+    const valoresTNR = datosOrdenados.map(row => Number(row["TNR"]));
+
+    const ctx = document.getElementById("grafico-tnr").getContext("2d");
+
+    if (graficoTNR !== null) {
+        graficoTNR.destroy();
+    }
+
+    graficoTNR = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: etiquetas,
+            datasets: [{
+                label: "TNR (%)",
+                data: valoresTNR,
+                borderWidth: 3,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                tension: 0.25
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {display: false},
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `TNR: ${context.raw.toFixed(2)}%`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: "TNR (%)"
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: "Año - Mes"
+                    }
+                }
+            }
+        }
+    });
 }
 
 document.addEventListener("change", function(e){
@@ -332,35 +358,3 @@ document.addEventListener("change", function(e){
     }
 
 });
-
-function obtenerSemaforo(riesgo) {
-    if (riesgo === "Bajo") {
-        return "🟢 Bajo";
-    }
-    if (riesgo === "Medio") {
-        return "🟡 Medio";
-    }
-    if (riesgo === "Alto") {
-        return "🟠 Alto";
-    }
-    if (riesgo === "Crítico") {
-        return "🔴 Crítico";
-    }
-    return riesgo;
-}
-
-function claseRiesgo(riesgo) {
-    if (riesgo === "Bajo") {
-        return "riesgo-bajo";
-    }
-    if (riesgo === "Medio") {
-        return "riesgo-medio";
-    }
-    if (riesgo === "Alto") {
-        return "riesgo-alto";
-    }
-    if (riesgo === "Crítico") {
-        return "riesgo-critico";
-    }
-    return "";
-}   
