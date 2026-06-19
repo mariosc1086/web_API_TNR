@@ -322,6 +322,7 @@ table th{
     padding:12px 8px;
     font-weight:800;
     text-align:center;
+    font-size: 11px;
 }
 
 table td{
@@ -329,6 +330,7 @@ table td{
     padding:12px 8px;
     text-align:center;
     color:#08245c;
+    font-size: 11px;
 }
 
 /* MOBILE TABLE */
