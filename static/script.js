@@ -1,5 +1,4 @@
 let ubicaciones = {};
-let graficoTNR = null;
 
 window.onload = async function () {
     const response = await fetch("/ubicaciones");
@@ -103,7 +102,6 @@ async function calcularProbabilidad() {
 
         construirTabla(resultado.info_conglomerado);
         construirTablaMobile(resultado.info_conglomerado);
-        construirGraficoTNR(resultado.info_conglomerado);
 
     } catch (error) {
         alert("Error al conectar con el servidor: " + error);
@@ -275,76 +273,6 @@ function construirTablaMobile(info) {
     });
 
     tabla.innerHTML = header + filas;
-}
-
-function construirGraficoTNR(info) {
-
-    if (!info || info.length === 0) return;
-
-    const ordenMeses = {
-        "ene": 1, "feb": 2, "mar": 3, "abr": 4,
-        "may": 5, "jun": 6, "jul": 7, "ago": 8,
-        "sep": 9, "oct": 10, "nov": 11, "dic": 12
-    };
-
-    const datosOrdenados = [...info].sort((a, b) => {
-        if (Number(a["Año"]) !== Number(b["Año"])) {
-            return Number(a["Año"]) - Number(b["Año"]);
-        }
-        return ordenMeses[a["Meses"]] - ordenMeses[b["Meses"]];
-    });
-
-    const etiquetas = datosOrdenados.map(row => `${row["Año"]}-${row["Meses"]}`);
-    const valoresTNR = datosOrdenados.map(row => Number(row["TNR"]));
-
-    const ctx = document.getElementById("grafico-tnr").getContext("2d");
-
-    if (graficoTNR !== null) {
-        graficoTNR.destroy();
-    }
-
-    graficoTNR = new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: etiquetas,
-            datasets: [{
-                label: "TNR (%)",
-                data: valoresTNR,
-                borderWidth: 3,
-                pointRadius: 5,
-                pointHoverRadius: 7,
-                tension: 0.25
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {display: false},
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return `TNR: ${context.raw.toFixed(2)}%`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: "TNR (%)"
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: "Año - Mes"
-                    }
-                }
-            }
-        }
-    });
 }
 
 document.addEventListener("change", function(e){
