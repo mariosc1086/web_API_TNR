@@ -174,7 +174,7 @@ body{
 }
 
 .hero h1{
-    font-size:48px;
+    font-size:40px;
     color:#08296d;
     font-weight:900;
     line-height:1.1;
@@ -437,21 +437,6 @@ table td{
         line-height:1.15;
         color:#08245c;
     }
-
-    /* .hero{
-        position:sticky;
-        top:0;
-        z-index:999;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        gap:10px;
-        background:#eef6ff;
-        padding:10px 12px;
-        margin:0 -14px 18px;
-        border-bottom:1px solid #d7e2f0;
-        box-shadow:0 3px 10px rgba(0,0,0,0.08);
-    } */
 
     .logo-box{
         margin-bottom:0;
