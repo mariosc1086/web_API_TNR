@@ -136,7 +136,7 @@ body{
 
 .main-content{
     flex:1;
-    padding:38px 42px 48px;
+    padding:38px 20px 30px;
 }
 
 .hero{
@@ -154,7 +154,7 @@ body{
 }
 
 .logo-inei{
-    height:110px;
+    height:80px;
     width:auto;
     object-fit:contain;
 } 
