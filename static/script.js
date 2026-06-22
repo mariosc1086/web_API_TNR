@@ -237,20 +237,27 @@ function construirTablaMobile(info) {
 
     const variablesMobile = [
         { etiqueta: "Mes", campo: "Meses" },
-        { etiqueta: "TNR C.", campo: "TNR Historico por Cong." },
-        { etiqueta: "TNR D.", campo: "TNR Historico por Dist." },
-        { etiqueta: "TNR Dep.", campo: "TNR Historico por Dep." },
-        { etiqueta: "Vis.", campo: "Visitas" },
-        { etiqueta: "TEM", campo: "TEM" },
-        { etiqueta: "Hog.", campo: "N_HOGAR" },
-        { etiqueta: "Pers.", campo: "TotalPersHogar" },
-        { etiqueta: "Muj.", campo: "TotalMuj12_49" },
-        { etiqueta: "Men<12", campo: "TotalMen_12" },
-        { etiqueta: "Men<6", campo: "TotalMen_6" },
-        { etiqueta: "Men<5", campo: "TotalMen_5" },
-        { etiqueta: "Men<3", campo: "TotalMen_3" },
-        { etiqueta: "Dur.", campo: "DuracionPromedio" },
-        { etiqueta: "TNR", campo: "TNR" }
+        { etiqueta: "Departamento", campo: "Departamento" },
+        { etiqueta: "Provincia", campo: "Provincia" },
+        { etiqueta: "Distrito", campo: "Distrito" },
+        { etiqueta: "Dominio Geográfico", campo: "Geografico" },
+        { etiqueta: "Estrato SE", campo: "Estratos" },
+        { etiqueta: "Conglomerado", campo: "Conglomerado" },
+        { etiqueta: "Altitud (msnm)", campo: "Altitud" },
+        { etiqueta: "TNR Histórico por Cong.", campo: "TNR Historico por Cong." },
+        { etiqueta: "TNR Histórico por Dist.", campo: "TNR Historico por Dist." },
+        { etiqueta: "TNR Histórico por Dep.", campo: "TNR Historico por Dep." },
+        { etiqueta: "Promedio de Visitas", campo: "Visitas" },
+        { etiqueta: "Tasa de Error de Marco", campo: "TEM" },
+        { etiqueta: "Número de Hogares", campo: "N_HOGAR" },
+        { etiqueta: "Total de Personas en el Hogar", campo: "TotalPersHogar" },
+        { etiqueta: "Total de Mujeres entre 12 a 49", campo: "TotalMuj12_49" },
+        { etiqueta: "Total de menores < 12", campo: "TotalMen_12" },
+        { etiqueta: "Total de menores < 6", campo: "TotalMen_6" },
+        { etiqueta: "Total de menores < 5", campo: "TotalMen_5" },
+        { etiqueta: "Total de menores < 3", campo: "TotalMen_3" },
+        { etiqueta: "Duración promedio de la entrevista", campo: "DuracionPromedio" },
+        { etiqueta: "Tasa de No Respuesta", campo: "TNR" }
     ];
 
     let header = "<tr><th>Variable</th>";
