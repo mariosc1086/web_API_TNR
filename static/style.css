@@ -406,18 +406,27 @@ table td{
     }
 
     .hero{
-        display:block;
-        text-align:center;
-        margin-bottom:20px;
+        position:sticky;
+        top:0;
+        z-index:999;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
+        background:#eef6ff;
+        padding:10px 12px;
+        margin:0 -14px 18px;
+        border-bottom:1px solid #d7e2f0;
+        box-shadow:0 3px 10px rgba(0,0,0,0.08);
     }
 
     .logo-box{
-        justify-content:center;
-        margin-bottom:14px;
-    }     
-    
+        margin-bottom:0;
+    }
+
     .logo-inei{
-        height:80px;
+        height:42px;
+        width:auto;
     }
 
     .logo-text{
@@ -425,11 +434,14 @@ table td{
     }
 
     .hero h1{
-        font-size:27px;
+        font-size:18px;
+        line-height:1.1;
+        text-align:left;
+        margin:0;
     }
 
     .hero p{
-        font-size:15px;
+        display:none;
     }
 
     .card{
