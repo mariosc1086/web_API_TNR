@@ -5,7 +5,7 @@ import pandas as pd
 modelo = joblib.load("pipeline_xgb_tnr.pkl")
 
 # Umbral óptimo
-THRESHOLD = 0.4292
+THRESHOLD = 0.429829
 
 
 def clasificar_riesgo(probabilidad: float) -> str:
