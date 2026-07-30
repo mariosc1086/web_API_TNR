@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIAT-TNR</title>
-    <link rel="stylesheet" href="/static/style.css?v=10">   
+    <link rel="stylesheet" href="/static/style.css">  
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/3.0.2/Control.FullScreen.min.css">
 </head>
 
 <body>
@@ -123,6 +125,19 @@
                 </div>
             </div>
 
+            <div class="card mapa-card">
+                <div class="card-title">
+                    <span class="title-icon">📍</span>
+                    <h2>Ubicación del conglomerado</h2>
+                </div>
+
+                <div id="mapa"></div>
+
+                <div id="mapa-sin-coordenadas" class="mapa-mensaje oculto">
+                    No se encontraron coordenadas para este conglomerado.
+                </div>
+            </div>
+
             <div class="card">
 
                 <div class="card-title">
@@ -146,6 +161,8 @@
 
 </div>
 
-<script src="/static/script.js?v=10"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/3.0.2/Control.FullScreen.min.js"></script>
+<script src="/static/script.js?v=7"></script>
 </body>
 </html>
