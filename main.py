@@ -1,26 +1,84 @@
+from contextlib import asynccontextmanager
+from pathlib import Path
+
+import pandas as pd
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import pandas as pd
 
 from prediccion import predecir_tnr
 
-app = FastAPI(title="SIAT-TNR")
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+BASE_DIR = Path(__file__).resolve().parent
+RUTA_DATOS = BASE_DIR / "data_tnr_final.csv"
+RUTA_STATIC = BASE_DIR / "static"
+RUTA_TEMPLATES = BASE_DIR / "templates"
 
-templates = Jinja2Templates(directory="templates")
 
-# Cargar base una sola vez
-data = pd.read_csv("data_tnr_final.csv")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Cargando base de datos...")
 
-# Asegurar tipo texto para búsqueda
-data["Departamento"] = data["Departamento"].astype(str)
-data["Provincia"] = data["Provincia"].astype(str)
-data["Distrito"] = data["Distrito"].astype(str)
-data["Conglomerado"] = data["Conglomerado"].astype(str)
+    data = pd.read_csv(RUTA_DATOS)
 
+    columnas_texto = [
+        "Departamento",
+        "Provincia",
+        "Distrito",
+        "Conglomerado"
+    ]
+
+    for columna in columnas_texto:
+        data[columna] = data[columna].astype(str).str.strip()
+
+    app.state.data = data
+
+    print(
+        f"Base cargada correctamente: "
+        f"{len(data):,} registros"
+    )
+
+    yield
+
+    print("Cerrando SIAT-TNR...")
+
+
+app = FastAPI(
+    title="SIAT-TNR",
+    lifespan=lifespan
+)
+
+app.mount(
+    "/static",
+    StaticFiles(directory=str(RUTA_STATIC)),
+    name="static"
+)
+
+templates = Jinja2Templates(
+    directory=str(RUTA_TEMPLATES)
+)
+
+def construir_datos_modelo(fila: pd.Series) -> dict:
+    return {
+        "Año": int(fila["Año"]),
+        "Meses": fila["Meses"],
+        "Departamento": fila["Departamento"],
+        "Estratos": fila["Estratos"],
+        "Geografico": fila["Geografico"],
+        "Visitas": float(fila["Visitas"]),
+        "Altitud": float(fila["Altitud"]),
+        "TNR_Historica_Cong": float(fila["TNR_Historica_Cong"]),
+        "TNR_Historica_Distrito": float(
+            fila["TNR_Historica_Distrito"]
+        ),
+        "TNR_Historica_Departamento": float(
+            fila["TNR_Historica_Departamento"]
+        ),
+        "TEM": float(fila["TEM"]),
+        "N_HOGAR": float(fila["N_HOGAR"]),
+        "DuracionPromedio": float(fila["DuracionPromedio"])
+    }
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
@@ -30,10 +88,10 @@ def home(request: Request):
         context={}
     )
 
-
 @app.post("/predict_conglomerado")
 async def predict_conglomerado(request: Request):
     try:
+        data = request.app.state.data
         consulta = await request.json()
 
         departamento = str(consulta["Departamento"]).strip()
@@ -56,27 +114,140 @@ async def predict_conglomerado(request: Request):
                 }
             )
 
+        orden_meses = {
+            "Enero": 1,
+            "Febrero": 2,
+            "Marzo": 3,
+            "Abril": 4,
+            "Mayo": 5,
+            "Junio": 6,
+            "Julio": 7,
+            "Agosto": 8,
+            "Septiembre": 9,
+            "Octubre": 10,
+            "Noviembre": 11,
+            "Diciembre": 12
+        }
+
         # Ordenar todos los registros encontrados
-        filtro_ordenado = filtro.sort_values(["Año", "Meses"])
+        filtro_ordenado = filtro.assign(
+            NumeroMes=filtro["Meses"].map(orden_meses)
+        ).sort_values(
+            ["Año", "NumeroMes"]
+        )
 
         # Tomar el registro más reciente solo para la predicción
         fila = filtro_ordenado.tail(1).iloc[0]
 
-        datos_modelo = {
-            "Año": int(fila["Año"]),
-            "Meses": fila["Meses"],
-            "Departamento": fila["Departamento"],
-            "Estratos": fila["Estratos"],
-            "Geografico": fila["Geografico"],
-            "Visitas": float(fila["Visitas"]),
-            "TNR_Historica_Cong": float(fila["TNR_Historica_Cong"]),
-            "TNR_Historica_Distrito": float(fila["TNR_Historica_Distrito"]),
-            "TNR_Historica_Departamento": float(fila["TNR_Historica_Departamento"]),
-            "TEM": float(fila["TEM"]),
-            "N_HOGAR": float(fila["N_HOGAR"])
-        }
+        datos_modelo = construir_datos_modelo(fila)
 
         resultado = predecir_tnr(datos_modelo)
+
+        # Se agrego esta parte de aqui
+        latitud = None if pd.isna(fila["Latitud"]) else float(fila["Latitud"])
+        longitud = None if pd.isna(fila["Longitud"]) else float(fila["Longitud"])
+
+        resultado["ubicacion"] = {
+            "latitud": latitud,
+            "longitud": longitud,
+            "departamento": str(fila["Departamento"]),
+            "provincia": str(fila["Provincia"]),
+            "distrito": str(fila["Distrito"]),
+            "conglomerado": str(fila["Conglomerado"])
+        }
+        # Hasta esta parte de aqui
+
+        # ============================================================
+        # CONGLOMERADOS DEL MISMO DISTRITO
+        # ============================================================
+
+        filtro_distrito = data[
+            (data["Departamento"].str.strip() == departamento) &
+            (data["Provincia"].str.strip() == provincia) &
+            (data["Distrito"].str.strip() == distrito)
+        ].copy()
+
+        filtro_distrito["NumeroMes"] = (
+            filtro_distrito["Meses"]
+            .map(orden_meses)
+            .fillna(0)
+        )
+
+        # Orden cronológico y selección del registro más reciente
+        # de cada conglomerado
+        ultimos_conglomerados = (
+            filtro_distrito
+            .sort_values(
+                ["Conglomerado", "Año", "NumeroMes"]
+            )
+            .groupby(
+                "Conglomerado",
+                as_index=False
+            )
+            .tail(1)
+        )
+
+        conglomerados_distrito = []
+
+        for _, fila_distrito in ultimos_conglomerados.iterrows():
+
+            lat = fila_distrito.get("Latitud")
+            lon = fila_distrito.get("Longitud")
+
+            # No enviar conglomerados sin coordenadas válidas
+            if pd.isna(lat) or pd.isna(lon):
+                continue
+
+            try:
+                datos_otro = construir_datos_modelo(
+                    fila_distrito
+                )
+
+                prediccion_otro = predecir_tnr(
+                    datos_otro
+                )
+
+                conglomerados_distrito.append({
+                    "conglomerado": str(
+                        fila_distrito["Conglomerado"]
+                    ).strip(),
+                    "departamento": str(
+                        fila_distrito["Departamento"]
+                    ).strip(),
+                    "provincia": str(
+                        fila_distrito["Provincia"]
+                    ).strip(),
+                    "distrito": str(
+                        fila_distrito["Distrito"]
+                    ).strip(),
+                    "latitud": float(lat),
+                    "longitud": float(lon),
+                    "probabilidad_porcentaje": (
+                        prediccion_otro[
+                            "probabilidad_porcentaje"
+                        ]
+                    ),
+                    "nivel_riesgo": prediccion_otro[
+                        "nivel_riesgo"
+                    ],
+                    "consultado": (
+                        str(
+                            fila_distrito["Conglomerado"]
+                        ).strip()
+                        == conglomerado
+                    )
+                })
+
+            except (ValueError, TypeError, KeyError):
+                # Evita que un registro defectuoso impida
+                # mostrar todo el resultado
+                continue
+
+        resultado["conglomerados_distrito"] = (
+            conglomerados_distrito
+        )
+
+        ## Hasta aqui ##
 
         if "recomendacion" not in resultado:
             riesgo = resultado.get("nivel_riesgo", "")
@@ -118,10 +289,11 @@ async def predict_conglomerado(request: Request):
             status_code=500,
             content={"error": str(e)}
         )
-    
-@app.get("/ubicaciones")
-def obtener_ubicaciones():
 
+@app.get("/ubicaciones")
+def obtener_ubicaciones(request: Request):
+
+    data = request.app.state.data
     estructura = {}
 
     for dep in sorted(data["Departamento"].dropna().unique()):
@@ -139,6 +311,8 @@ def obtener_ubicaciones():
                 (data["Provincia"] == prov)
             ]["Distrito"].dropna().unique()
 
-            estructura[dep][prov] = sorted(list(distritos))
+            estructura[dep][prov] = sorted(
+                distritos.tolist()
+            )
 
     return estructura

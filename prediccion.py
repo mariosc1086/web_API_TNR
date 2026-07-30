@@ -1,12 +1,26 @@
+import os
+
+# Limitar los hilos nativos antes de cargar NumPy, XGBoost y el modelo
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+
+from pathlib import Path
 import joblib
 import pandas as pd
 
+BASE_DIR = Path(__file__).resolve().parent
+
+RUTA_MODELO = BASE_DIR / "pipeline_xgb_tnr.pkl"
+RUTA_THRESHOLD = BASE_DIR / "threshold_tnr.pkl"
+
 # Cargar modelo una sola vez al iniciar
-modelo = joblib.load("pipeline_xgb_tnr.pkl")
+modelo = joblib.load(RUTA_MODELO)
+THRESHOLD = float(joblib.load(RUTA_THRESHOLD))
 
-# Umbral óptimo
-THRESHOLD = 0.429829
-
+# Evitar bloqueos de recarga automática en Windows
+modelo.set_params(modelo__n_jobs=1)
 
 def clasificar_riesgo(probabilidad: float) -> str:
     if probabilidad < 0.15:
@@ -37,11 +51,13 @@ def predecir_tnr(datos: dict) -> dict:
         "Estratos": datos["Estratos"],
         "Geografico": datos["Geografico"],
         "Visitas": float(datos["Visitas"]),
+        "Altitud": float(datos["Altitud"]),
         "TNR_Historica_Cong": float(datos["TNR_Historica_Cong"]),
         "TNR_Historica_Distrito": float(datos["TNR_Historica_Distrito"]),
         "TNR_Historica_Departamento": float(datos["TNR_Historica_Departamento"]),
         "TEM": float(datos["TEM"]),
-        "N_HOGAR": float(datos["N_HOGAR"])
+        "N_HOGAR": float(datos["N_HOGAR"]),
+        "DuracionPromedio": float(datos["DuracionPromedio"])
     }])
 
     probabilidad = modelo.predict_proba(df)[:, 1][0]
